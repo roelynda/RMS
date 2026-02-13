@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management Dashboard</title>
+    <link rel="stylesheet" href="Customer Management/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar (same as other pages) -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2>RMS</h2>
+        <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="menu">
+        <a class="menu-item" href="index.html">
+            <i class="fas fa-home"></i>
+            <span class="menu-text">Dashboard</span>
+        </a>
+        <a class="menu-item" href="inventory.html">
+            <i class="fas fa-boxes-stacked"></i>
+            <span class="menu-text">Inventory</span>
+        </a>
+        <a class="menu-item active" href="#">
+            <i class="fas fa-users"></i>
+            <span class="menu-text">Customers</span>
+        </a>
+        <a class="menu-item" href="erm.html">
+            <i class="fas fa-user-tie"></i>
+            <span class="menu-text">Employees & Roles</span>
+        </a>
+        <a class="menu-item" href="ap.html">
+            <i class="fas fa-clock"></i>
+            <span class="menu-text">Attendance & Payroll</span>
+        </a>
+        <a class="menu-item" href="service.html">
+            <i class="fas fa-scissors"></i>
+            <span class="menu-text">Services</span>
+        </a>
+        <a class="menu-item" href="sra.html">
+            <i class="fas fa-chart-line"></i>
+            <span class="menu-text">Sales Report</span>
+        </a>
+        <hr style="border-color:rgba(255,255,255,0.1); margin:15px 20px;">
+        <a class="menu-item" href="#" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="menu-text">Logout</span>
+        </a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+    <div class="topbar">
+        <div class="page-title">Customer Management</div>
+        <a href="index.html" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <div class="content-card">
+        <h2>Customers Overview</h2>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by name, email, or phone..." oninput="filterCustomers()">
+            </div>
+            <button class="btn btn-primary" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Add Customer
+            </button>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Assigned Employee</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="customerTable"></tbody>
+            </table>
+        </div>
+
+        <p id="noResults" style="text-align:center; color:#95a5a6; padding:60px 0; display:none;">
+            No customers found.
+        </p>
+    </div>
+</div>
+
+<!-- Add/Edit Customer Modal -->
+<div id="addEditModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('addEditModal')">×</span>
+        <h2 id="modalTitle">Add New Customer</h2>
+        <form id="customerForm">
+            <input type="hidden" id="customerId">
+            <div class="form-field">
+                <input type="text" id="name" placeholder=" " required>
+                <label>Name</label>
+            </div>
+            <div class="form-field">
+                <input type="email" id="email" placeholder=" " required>
+                <label>Email</label>
+            </div>
+            <div class="form-field">
+                <input type="tel" id="phone" placeholder=" " required>
+                <label>Phone</label>
+            </div>
+            <div class="form-field">
+                <input type="text" id="address" placeholder=" " required>
+                <label>Address</label>
+            </div>
+            <div class="form-field">
+                <select id="assignedEmployee" required>
+                    <option value="">Select Assigned Employee</option>
+                </select>
+                <label>Assigned Employee</label>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('addEditModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- View Customer Details Modal -->
+<div id="viewModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('viewModal')">×</span>
+        <h2>Customer Details</h2>
+        <div id="customerDetails">
+            <p><strong>Name:</strong> <span id="detailName"></span></p>
+            <p><strong>Email:</strong> <span id="detailEmail"></span></p>
+            <p><strong>Phone:</strong> <span id="detailPhone"></span></p>
+            <p><strong>Address:</strong> <span id="detailAddress"></span></p>
+            <p><strong>Assigned Employee:</strong> <span id="detailAssignedEmp"></span></p>
+
+            <div class="history-section">
+                <h3>Purchase History</h3>
+                <textarea id="purchaseHistory" rows="6" placeholder="Enter purchase history..."></textarea>
+            </div>
+            <div class="history-section">
+                <h3>Service History</h3>
+                <textarea id="serviceHistory" rows="6" placeholder="Enter service history..."></textarea>
+            </div>
+            <div class="history-section">
+                <h3>Notes & Preferences</h3>
+                <textarea id="notes" rows="8" placeholder="Enter notes and preferences..."></textarea>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="saveDetails()">Save Changes</button>
+                <button class="btn btn-warning" onclick="editCustomerFromDetails()">Edit Profile</button>
+                <button class="btn btn-danger" onclick="openDeleteModal()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content" style="max-width:420px;">
+        <span class="close-modal" onclick="closeModal('deleteModal')">×</span>
+        <h2>Confirm Deletion</h2>
+        <p>Are you sure you want to delete this customer? This action cannot be undone.</p>
+        <input type="hidden" id="deleteId">
+        <div class="modal-buttons">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('deleteModal')">Cancel</button>
+            <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+        </div>
+    </div>
+</div>
+
+    <script src="cm.js"></script>
+</body>
+
+</html>

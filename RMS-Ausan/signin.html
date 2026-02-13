@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Signup Page</title>
+    <link rel="stylesheet" href="Sign-in/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-box">
+            <div class="tab-group">
+                <div class="tab active" onclick="showForm('login')">Login</div>
+                <div class="tab" onclick="showForm('signup')">Signup</div>
+            </div>
+
+            <div id="login" class="form-content active">
+                <h2>Welcome Back!</h2>
+                <form>
+                    <div class="field">
+                        <input type="email" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="field">
+                        <input type="password" required>
+                        <label>Password</label>
+                    </div>
+                    <button type="submit">Login</button>
+                    <p class="link">Forgot password? <a href="#">Reset here</a></p>
+                </form>
+            </div>
+
+            <div id="signup" class="form-content">
+                <h2>Create Account</h2>
+                <form id="signupForm" novalidate>
+                    <div class="field">
+                        <input type="text" required>
+                        <label>Full Name</label>
+                        <span class="error"></span>
+                    </div>
+                    <div class="field">
+                        <input type="email" required>
+                        <label>Email</label>
+                        <span class="error"></span>
+                    </div>
+                    <div class="field">
+                        <input type="password" id="signupPassword" required>
+                        <label>Password</label>
+                        <span class="error"></span>
+                    </div>
+                    <div class="field">
+                        <input type="password" required>
+                        <label>Confirm Password</label>
+                        <span class="error"></span>
+                    </div>
+                    <button type="submit">Signup</button>
+                    <p class="link">Already have an account? <a href="#" onclick="showForm('login')">Login here</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="signin.js"></script>
+</body>
+
+</html>

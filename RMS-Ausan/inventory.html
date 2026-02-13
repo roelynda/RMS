@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+    <link rel="stylesheet" href="Inventory/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2>RMS</h2>
+        <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="menu">
+        <a class="menu-item" href="index.html">
+            <i class="fas fa-home"></i>
+            <span class="menu-text">Dashboard</span>
+        </a>
+        <a class="menu-item active" href="#">
+            <i class="fas fa-boxes-stacked"></i>
+            <span class="menu-text">Inventory</span>
+        </a>
+        <a class="menu-item" href="cm.html">
+            <i class="fas fa-users"></i>
+            <span class="menu-text">Customers</span>
+        </a>
+        <a class="menu-item" href="erm.html">
+            <i class="fas fa-user-tie"></i>
+            <span class="menu-text">Employees & Roles</span>
+        </a>
+        <a class="menu-item" href="ap.html">
+            <i class="fas fa-clock"></i>
+            <span class="menu-text">Attendance & Payroll</span>
+        </a>
+        <a class="menu-item" href="service.html">
+            <i class="fas fa-scissors"></i>
+            <span class="menu-text">Services</span>
+        </a>
+        <a class="menu-item" href="sra.html">
+            <i class="fas fa-chart-line"></i>
+            <span class="menu-text">Sales Report</span>
+        </a>
+        <hr style="border-color:rgba(255,255,255,0.1); margin:15px 20px;">
+        <a class="menu-item" href="#" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="menu-text">Logout</span>
+        </a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+    <div class="topbar">
+        <div class="page-title">Inventory Management</div>
+        <a href="index.html" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <div class="content-card">
+        <h2>Inventory Overview</h2>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search product name..." oninput="filterInventory()">
+            </div>
+            <button class="btn btn-primary" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Add Product
+            </button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Cost per Unit</th>
+                    <th>Total Value</th>
+                    <th>Used In Services</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryTable"></tbody>
+        </table>
+
+        <p id="emptyMessage" style="text-align:center; color:#95a5a6; padding:60px 0; display:none;">
+            No products found.
+        </p>
+    </div>
+</div>
+
+<!-- Add Product Modal -->
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('addModal')">×</span>
+        <h2>Add New Product</h2>
+        <form id="addForm">
+            <div class="form-field">
+                <input type="text" id="productName" placeholder=" " required>
+                <label>Product Name</label>
+            </div>
+            <div class="form-field">
+                <input type="number" id="quantity" placeholder=" " min="0" required>
+                <label>Initial Quantity</label>
+            </div>
+            <div class="form-field">
+                <input type="number" id="cost" placeholder=" " step="0.01" min="0" required>
+                <label>Cost per Unit (₱)</label>
+            </div>
+            <div class="form-field">
+                <select id="usedInServices" multiple>
+                    <option value="Eyelash">Eyelash</option>
+                    <option value="Nails">Nails</option>
+                    <option value="Facial Treatment">Facial Treatment</option>
+                    <option value="Waxing Treatment">Waxing Treatment</option>
+                    <option value="Warts Removal">Warts Removal</option>
+                    <option value="Eyebrow Microblading">Eyebrow Microblading</option>
+                </select>
+                <label>Used In Services (select all that apply)</label>
+            </div>
+            <div style="margin-top:28px; display:flex; gap:16px; justify-content:flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('addModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Product Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('editModal')">×</span>
+        <h2>Edit Product</h2>
+        <form id="editForm">
+            <input type="hidden" id="editIndex">
+            <div class="form-field">
+                <input type="text" id="editName" placeholder=" " required>
+                <label>Product Name</label>
+            </div>
+            <div class="form-field">
+                <input type="number" id="editQuantity" placeholder=" " min="0" required>
+                <label>Quantity</label>
+            </div>
+            <div class="form-field">
+                <input type="number" id="editCost" placeholder=" " step="0.01" min="0" required>
+                <label>Cost per Unit (₱)</label>
+            </div>
+            <div class="form-field">
+                <select id="editUsedInServices" multiple>
+                    <option value="Eyelash">Eyelash</option>
+                    <option value="Nails">Nails</option>
+                    <option value="Facial Treatment">Facial Treatment</option>
+                    <option value="Waxing Treatment">Waxing Treatment</option>
+                    <option value="Warts Removal">Warts Removal</option>
+                    <option value="Eyebrow Microblading">Eyebrow Microblading</option>
+                    <option value="Miscellanaeous">Others</option>
+                </select>
+                <label>Used In Services (select all that apply)</label>
+            </div>
+            <div style="margin-top:28px; display:flex; gap:16px; justify-content:flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
+                <button type="submit" class="btn btn-warning">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Deduct Modal -->
+<div id="deductModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('deductModal')">×</span>
+        <h2>Deduct / Use Stock</h2>
+        <form id="deductForm">
+            <input type="hidden" id="deductIndex">
+            <div class="form-field">
+                <input type="number" id="deductQty" placeholder=" " min="1" required>
+                <label>Quantity to Deduct</label>
+            </div>
+            <div class="form-field">
+                <input type="text" id="deductReason" placeholder=" " required>
+                <label>Reason / Notes</label>
+            </div>
+            <div style="margin-top:28px; display:flex; gap:16px; justify-content:flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('deductModal')">Cancel</button>
+                <button type="submit" class="btn btn-danger">Confirm Deduct</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Usage History Modal -->
+<div id="historyModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('historyModal')">×</span>
+        <h2>Usage History - <span id="historyProductName"></span></h2>
+
+        <div style="margin: 16px 0; display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+            <div style="flex: 1; min-width: 180px;">
+                <label style="font-size: 14px; color: #555; margin-bottom: 6px; display: block;">From Date</label>
+                <input type="date" id="historyFromDate">
+            </div>
+            <div style="flex: 1; min-width: 180px;">
+                <label style="font-size: 14px; color: #555; margin-bottom: 6px; display: block;">To Date</label>
+                <input type="date" id="historyToDate">
+            </div>
+            <button class="btn btn-primary" onclick="filterHistory()" style="margin-top: 24px; align-self: flex-end;">
+                Filter
+            </button>
+        </div>
+
+        <div class="history-list" id="historyList"></div>
+
+        <canvas id="stockChart" height="200" style="margin-top: 24px;"></canvas>
+
+        <div style="margin-top: 24px; display: flex; gap: 16px; justify-content: flex-end; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="exportHistoryToCSV()">Export CSV</button>
+            <button class="btn btn-secondary" onclick="closeModal('historyModal')">Close</button>
+        </div>
+    </div>
+</div>
+
+
+    <script src="inventory.js"></script>
+</body>
+
+</html>

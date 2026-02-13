@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Dashboard - Business Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    </head>
+<body>
+
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2>RMS</h2>
+        <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="menu">
+        <a class="menu-item active" href="#" onclick="showSection('dashboard')">
+            <i class="fas fa-home"></i>
+            <span class="menu-text">Dashboard</span>
+        </a>
+        <a class="menu-item" href="signin.html" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="menu-text">Logout</span>
+        </a>
+        <hr style="border-color:rgba(255,255,255,0.1); margin:15px 20px;">
+        <a class="menu-item" href="inventory.html">
+            <i class="fas fa-boxes-stacked"></i>
+            <span class="menu-text">Inventory</span>
+        </a>
+        <a class="menu-item" href="cm.html">
+            <i class="fas fa-users"></i>
+            <span class="menu-text">Customers</span>
+        </a>
+        <a class="menu-item" href="erm.html">
+            <i class="fas fa-user-tie"></i>
+            <span class="menu-text">Employees & Roles</span>
+        </a>
+        <a class="menu-item" href="ap.html">
+            <i class="fas fa-clock"></i>
+            <span class="menu-text">Attendance & Payroll</span>
+        </a>
+        <a class="menu-item" href="service.html">
+            <i class="fas fa-scissors"></i>
+            <span class="menu-text">Services</span>
+        </a>
+        <a class="menu-item" href="sra.html">
+            <i class="fas fa-chart-line"></i>
+            <span class="menu-text">Sales Report</span>
+        </a>
+    </div>
+</div>
+
+<div class="main-content" id="mainContent">
+    <div class="topbar">
+        <div class="welcome">Welcome, <span id="currentUser">User</span></div>
+        <div class="user-info">
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div id="dashboard" class="section active">
+        <div class="dashboard-welcome">
+            <h2>Business Management System</h2>
+            <p style="font-size:18px; color:#555; max-width:700px; margin:20px auto;">
+                Manage your entire business operations from one central dashboard.<br>
+                Access inventory, customers, employees, payroll, services, and analytics with a single click.
+            </p>
+
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <p>Total Customers</p>
+                    <h3 id="statCustomers">0</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Active Appointments</p>
+                    <h3 id="statAppointments">0</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Today's Sales</p>
+                    <h3 id="statTodaySales">₱0.00</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Pending Payroll</p>
+                    <h3 id="statPendingPayroll">0</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="index.js"></script>
+
+</body>
+</html>

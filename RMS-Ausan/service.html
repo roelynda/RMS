@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Management Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="Service Manaement/css/style.css">
+    </head>
+<body>
+
+<div class="container">
+ <!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h2>RMS</h2>
+        <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="menu">
+        <a class="menu-item" href="index.html">
+            <i class="fas fa-home"></i>
+            <span class="menu-text">Dashboard</span>
+        </a>
+        <a class="menu-item" href="inventory.html">
+            <i class="fas fa-boxes-stacked"></i>
+            <span class="menu-text">Inventory</span>
+        </a>
+        <a class="menu-item" href="cm.html">
+            <i class="fas fa-users"></i>
+            <span class="menu-text">Customers</span>
+        </a>
+        <a class="menu-item" href="erm.html">
+            <i class="fas fa-user-tie"></i>
+            <span class="menu-text">Employees & Roles</span>
+        </a>
+        <a class="menu-item" href="ap.html">
+            <i class="fas fa-clock"></i>
+            <span class="menu-text">Attendance & Payroll</span>
+        </a>
+        <a class="menu-item active" href="#">
+            <i class="fas fa-scissors"></i>
+            <span class="menu-text">Services</span>
+        </a>
+        <a class="menu-item" href="sra.html">
+            <i class="fas fa-chart-line"></i>
+            <span class="menu-text">Sales Report</span>
+        </a>
+        <hr style="border-color:rgba(255,255,255,0.1); margin:15px 20px;">
+        <a class="menu-item" href="#" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="menu-text">Logout</span>
+        </a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+    <div class="topbar">
+        <div class="page-title">Service Management</div>
+        <a href="index.html" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <div class="content-card">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('appointments')">Appointments</div>
+            <div class="tab" onclick="showTab('execution')">Service Execution</div>
+            <div class="tab" onclick="showTab('reports')">Reports & History</div>
+        </div>
+
+        <!-- Appointments Tab -->
+        <div id="appointments" class="tab-content active">
+            <div style="margin-bottom: 24px; display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary" onclick="openAppointmentModal('add')">
+                    <i class="fas fa-plus"></i> Add Appointment
+                </button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Service</th>
+                        <th>Date & Time</th>
+                        <th>Specialist</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="appointmentsTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Service Execution Tab -->
+        <div id="execution" class="tab-content">
+            <div id="executionList"></div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Service</th>
+                        <th>Date</th>
+                        <th>Specialist</th>
+                        <th>Sales (₱)</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="reportsTable"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Appointment Modal (Add/Edit) -->
+<div id="appointmentModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('appointmentModal')">×</span>
+        <h2 id="appointmentTitle">Add Appointment</h2>
+        <form id="appointmentForm">
+            <input type="hidden" id="apptId">
+            <div class="form-field">
+                <input type="text" id="apptCustomerName" placeholder=" " required>
+                <label>Customer Name</label>
+            </div>
+            <div class="form-field">
+                <input type="email" id="apptCustomerEmail" placeholder=" " required>
+                <label>Customer Email</label>
+            </div>
+            <div class="form-field">
+                <input type="tel" id="apptCustomerPhone" placeholder=" " required>
+                <label>Customer Phone</label>
+            </div>
+            <div class="form-field">
+                <input type="text" id="apptCustomerAddress" placeholder=" " required>
+                <label>Customer Address</label>
+            </div>
+            <div class="form-field">
+                <select id="apptService" required>
+                    <option value="">Select Service</option>
+                    <option value="Eyelash">Eyelash</option>
+                    <option value="Nails">Nails</option>
+                    <option value="Facial Treatment">Facial Treatment</option>
+                    <option value="Waxing Treatment">Waxing Treatment</option>
+                    <option value="Warts Removal">Warts Removal</option>
+                    <option value="Eyebrow Microblading">Eyebrow Microblading</option>
+                </select>
+                <label>Service Type</label>
+            </div>
+            <div class="form-field">
+                <input type="datetime-local" id="apptDateTime" required>
+                <label>Date & Time</label>
+            </div>
+            <div class="form-field">
+                <select id="apptSpecialist" required>
+                    <option value="">Select Specialist</option>
+                </select>
+                <label>Specialist</label>
+            </div>
+            <div class="form-field">
+                <textarea id="apptNotes" placeholder="Additional notes..."></textarea>
+                <label>Notes</label>
+            </div>
+            <div style="margin-top:28px; display:flex; gap:16px; justify-content:flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('appointmentModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Status Update Modal -->
+<div id="statusModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('statusModal')">×</span>
+        <h2>Update Status</h2>
+        <form id="statusForm">
+            <input type="hidden" id="statusId">
+            <div class="form-field">
+                <select id="apptStatus" required>
+                    <option value="Pending">Pending</option>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                <label>Status</label>
+            </div>
+            <div class="form-field">
+                <input type="number" id="salesAmount" step="0.01" min="0" placeholder="Enter sales if completed...">
+                <label>Sales Amount (₱)</label>
+            </div>
+            <div class="form-field">
+                <textarea id="statusNotes" placeholder="Update notes..."></textarea>
+                <label>Notes</label>
+            </div>
+            <div style="margin-top:28px; display:flex; gap:16px; justify-content:flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('statusModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="service.js"></script>
+
+</body>
+</html>
